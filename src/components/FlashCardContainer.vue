@@ -1,16 +1,24 @@
 <script setup lang="ts">
 import FlashCard from './FlashCard.vue';
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { useStore } from "../store";
+import Flashcard from '../Flashcard';
 
+// Init with empty refs
 const flashcards = useStore();
-const cardQueue = ref(flashcards.getFlashcardQueue());
+const cardQueue = ref(new Array<Flashcard>());
 const correct = ref(0);
 const incorrect = ref(0);
-const ended = ref(false) 
-const card = cardQueue.value.shift();
-const currentCard = ref(card);
+const started = ref(false);
+const ended = ref(false)
+const currentCard = ref();
 
+function start() {
+  started.value = true;
+  ended.value = false; // Avoid bugs before they appear :D
+  cardQueue.value = flashcards.getFlashcardQueue();
+  currentCard.value = cardQueue.value.shift();
+}
 
 function correctAnswer() {
   correct.value++;
@@ -35,13 +43,24 @@ function done() {
   console.log("You're Done!");
 }
 
+function restart() {
+  ended.value = false;
+  cardQueue.value = flashcards.getFlashcardQueue();
+  currentCard.value = cardQueue.value.shift();
+  correct.value = 0;
+  incorrect.value = 0;
+}
+
 </script>
 
 <template>
-  <FlashCard v-if="!ended" :card="currentCard" 
+  <FlashCard v-if="started && !ended" :card="currentCard" 
   @correct="correctAnswer()"
   @incorrect="incorrectAnswer()"
   />
+  <div v-else-if="!started">
+  <button @click="start()">Start</button>
+  </div>
   <div v-else>
     You're All Done!
     <br /><br />
@@ -50,6 +69,8 @@ function done() {
     Incorrect: {{ incorrect }}
     <br />
     Percent Correct: {{ (correct / (incorrect + correct))*100}}%
+    <br />
+      <button @click="restart()">Restart</button>
   </div>
 </template>
 
