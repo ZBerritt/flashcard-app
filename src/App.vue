@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useStore } from "./store";
+import { useFlashcardStore } from "./store";
 import FlashCardContainerVue from './components/FlashCardContainer.vue';
 
-const flashCards = useStore();
+const flashCards = useFlashcardStore();
 </script>
 
 <template>

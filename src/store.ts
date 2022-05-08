@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { useStorage } from "@vueuse/core";
 import Flashcard from "./Flashcard";
 
-export const useStore = defineStore("main", {
+export const useFlashcardStore = defineStore("flashcards", {
     state: () => ({
         flashcards: useStorage("flashcards", new Array<Flashcard>()),
     }),
@@ -18,20 +18,6 @@ export const useStore = defineStore("main", {
         },
         getRandomFlashcard(): Flashcard {
             return this.flashcards[Math.floor(Math.random()*this.flashcards.length)]
-        },
-        getFlashcardQueue(): Array<Flashcard> {
-            let queue = new Array<Flashcard>();
-            let currentIndex = this.flashcards.length, randomIndex;
-            let cards = Object.assign([], this.flashcards);
-            while (currentIndex !== 0) {
-
-                // Pick a remaining element.
-                randomIndex = Math.floor(Math.random() * currentIndex);
-                currentIndex--;
-                let item: Flashcard = cards.splice(randomIndex, 1)[0];
-                queue.push(item);
-              }
-              return queue
         },
         reset() {
             this.flashcards.splice(0)
@@ -74,4 +60,84 @@ export const useStore = defineStore("main", {
             }
         }
     }
-})
+});
+
+export const useSessionStore = defineStore("gameSession", {
+    state: () => ({
+        state: GameStatus.NOT_STARTED,
+        correct: 0,
+        incorrect: 0,
+        queue: new Array<Flashcard>(),
+        currentCard: false ? new Array<Flashcard>()[0] : null // This is stupid but it works
+    }),
+    getters: {
+        getCorrect(): Number {
+            return this.correct;
+        },
+        getIncorrect(): Number {
+            return this.incorrect
+        },
+        getState(): GameStatus {
+            return this.state;
+        },
+        getCurrentCard(): Flashcard | null {
+            return this.currentCard;
+        },
+        getPercentCorrect(): string {
+            return (this.correct / (this.incorrect + this.correct))*100 + "%";
+        }
+    },
+    actions: {
+        start(flashcards: Flashcard[]) { // (Re)starts a game session
+            this.queue = new Array<Flashcard>();
+            let currentIndex = flashcards.length, randomIndex;
+            let flashcardsCopy = Object.assign([], flashcards);
+            while (currentIndex !== 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                let item: Flashcard = flashcardsCopy.splice(randomIndex, 1)[0];
+                this.queue.push(item);
+              }
+              this.state = GameStatus.IN_PROGRESS;
+              this.correct = 0;
+              this.incorrect = 0;
+              console.log(this.queue)
+              let nextCard = this.queue.shift();
+              if (nextCard) {
+                  this.currentCard = nextCard;
+              } else {
+                  this.end();
+              }
+        },
+        correctAnswer() {
+            this.correct++;
+            let nextCard = this.queue.shift();
+            if (nextCard) {
+                this.currentCard = nextCard;
+            } else {
+                this.end();
+            }
+        },
+        incorrectAnswer() {
+            this.incorrect++;
+            let nextCard = this.queue.shift();
+            if (nextCard) {
+                this.currentCard = nextCard;
+            } else {
+                this.end();
+            }
+        },
+        end() {
+            console.log("You're Done!");
+            this.state = GameStatus.COMPLETE;
+            this.queue = [];
+            this.currentCard = null;
+        }
+    }
+});
+
+export enum GameStatus {
+    NOT_STARTED,
+    IN_PROGRESS,
+    COMPLETE
+}
