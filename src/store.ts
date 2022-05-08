@@ -88,8 +88,8 @@ export const useSessionStore = defineStore("gameSession", {
         }
     },
     actions: {
-        start(flashcards: Flashcard[]) { // (Re)starts a game session
-            this.queue = new Array<Flashcard>();
+        start(flashcards: Flashcard[]) { // Starts a game session
+            this.queue = [];
             let currentIndex = flashcards.length, randomIndex;
             let flashcardsCopy = Object.assign([], flashcards);
             while (currentIndex !== 0) {
@@ -132,6 +132,11 @@ export const useSessionStore = defineStore("gameSession", {
             this.state = GameStatus.COMPLETE;
             this.queue = [];
             this.currentCard = null;
+        },
+        reset() {
+            this.state = GameStatus.NOT_STARTED;
+            this.correct = 0;
+            this.incorrect = 0;
         }
     }
 });

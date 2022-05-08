@@ -30,7 +30,7 @@ const currentCard = computed(() => {
     <br />
     Percent Correct: {{ gameSession.getPercentCorrect }}
     <br />
-      <button @click="gameSession.start(flashcards.getFlashcardData())">Restart</button>
+      <button @click="gameSession.reset()">Restart</button>
   </div>
 </template>
 
