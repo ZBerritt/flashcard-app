@@ -9,17 +9,21 @@ const gameSession = useSessionStore();
 const currentCard = computed(() => {
   return gameSession.getCurrentCard;
 });
+const jeopardy = ref(false);
 
 </script>
 
 <template>
-  <FlashCard v-if="gameSession.getState === GameStatus.IN_PROGRESS" :card="currentCard" 
+  <FlashCard v-if="gameSession.getState === GameStatus.IN_PROGRESS" :card="currentCard"
+  :jeopardy="jeopardy" 
   @correct="gameSession.correctAnswer()"
   @incorrect="gameSession.incorrectAnswer()"
   />
   <div v-else-if="gameSession.getState == GameStatus.NOT_STARTED">
   <h1>Flashcard App</h1>
   <button @click="gameSession.start(flashcards.getFlashcardData())">Start</button>
+  <br />
+  <span id="jeopardy">Jeopardy Mode</span><input v-model="jeopardy" label="jeopardy" type="checkbox" />
   </div>
   <div v-else>
     You're All Done!
