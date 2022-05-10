@@ -7,6 +7,7 @@ export default defineConfig({
   plugins: [
     vue(),
     VitePWA({
+      includeAssets: ['favicon.svg', 'favicon.ico', 'robots.txt', 'apple-touch-icon.png'],  
       manifest: {
         name: "Flashcard App",
         short_name: "Flashcards",
@@ -32,6 +33,12 @@ export default defineConfig({
             src: 'android-chrome-512x512.png',
             sizes: '512x512',
             type: 'image/png',
+          },
+          {
+            src: 'android-chrome-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'any maskable',
           },
           {
           src: 'apple-touch-icon.png',

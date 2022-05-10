@@ -6,7 +6,9 @@
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+    "serve": "vite preview"
+
   },
   "dependencies": {
     "@vueuse/core": "^8.4.2",
