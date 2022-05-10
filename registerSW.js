@@ -1,1 +1,0 @@
-if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/flashcard-app/sw.js', { scope: '/flashcard-app/' })})}
