@@ -23,7 +23,7 @@ const jeopardy = ref(false);
   <h1>Flashcard App</h1>
   <button @click="gameSession.start(flashcards.getFlashcardData())">Start</button>
   <br />
-  <span id="jeopardy">Jeopardy Mode</span><input v-model="jeopardy" label="jeopardy" type="checkbox" />
+  <label for="jeopardy">Jeopardy Mode</label><input v-model="jeopardy" id="jeopardy" type="checkbox" />
   </div>
   <div v-else>
     You're All Done!
