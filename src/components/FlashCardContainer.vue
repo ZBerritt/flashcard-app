@@ -1,15 +1,18 @@
 <script setup lang="ts">
 import FlashCard from './FlashCard.vue';
 import { ref, computed } from "vue";
-import { useFlashcardStore, useSessionStore, GameStatus } from "../store";
+import { useFlashcardStore, useSessionStore, GameStatus, useSettingsStore } from "../store";
 
 // Init game session
 const flashcards = useFlashcardStore();
 const gameSession = useSessionStore();
+const settings = useSettingsStore();
 const currentCard = computed(() => {
   return gameSession.getCurrentCard;
 });
-const jeopardy = ref(false);
+const jeopardy = computed(() => {
+  return settings.getSettings.jeopardy;
+});
 
 </script>
 
@@ -22,8 +25,6 @@ const jeopardy = ref(false);
   <div v-else-if="gameSession.getState == GameStatus.NOT_STARTED">
   <h1>Flashcard App</h1>
   <button @click="gameSession.start(flashcards.getFlashcardData())">Start</button>
-  <br />
-  <label for="jeopardy">Jeopardy Mode</label><input v-model="jeopardy" id="jeopardy" type="checkbox" />
   </div>
   <div v-else>
     You're All Done!

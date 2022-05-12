@@ -1,6 +1,21 @@
 import { defineStore } from "pinia";
 import { useStorage } from "@vueuse/core";
 import Flashcard from "./Flashcard";
+import Settings from "./Settings";
+
+export const useSettingsStore = defineStore("settings", {
+    state: () => ({
+        settings: useStorage("settings", new Settings()),
+    }),
+    getters: {
+        getSettings(): Settings {
+            return this.settings
+        }
+    },
+    actions: {
+
+    }
+})
 
 export const useFlashcardStore = defineStore("flashcards", {
     state: () => ({
