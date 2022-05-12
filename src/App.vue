@@ -4,6 +4,7 @@ import FlashCardContainerVue from './components/FlashCardContainer.vue';
 import { ref } from "vue";
 import ManageFlashcards from "./components/ManageFlashcards.vue";
 import SettingsComponent from "./components/Settings.vue";
+import ReloadPrompt from "./components/ReloadPrompt.vue";
 
 const gameSession = useSessionStore();
 const settings = useSettingsStore();
@@ -18,6 +19,7 @@ const changingSettings = ref(false);
   <br />
   <button :hidden="gameSession.getState !== GameStatus.NOT_STARTED" v-if="!changingSettings && !manage" @click="manage = true">Manage Flashcards</button>
   <button :hidden="gameSession.getState !== GameStatus.NOT_STARTED" v-if="!changingSettings && !manage" @click="changingSettings = true">Settings</button>
+  <ReloadPrompt />
 </template>
 
 <style>
